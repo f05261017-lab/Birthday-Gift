@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Iqra!</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb);
+    overflow:hidden;
+    padding:20px;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+.card{
+    position:relative;
+    z-index:10;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(12px);
+    padding:30px;
+    border-radius:25px;
+    text-align:center;
+    color:white;
+    width:100%;
+    max-width:420px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+h1{
+    font-size:2.3rem;
+    margin-bottom:10px;
+}
+
+.cake{
+    font-size:4rem;
+    margin:15px 0;
+}
+
+.subtitle{
+    font-size:1rem;
+    opacity:0.95;
+    margin-bottom:20px;
+}
+
+button{
+    background:white;
+    color:#ff4d6d;
+    border:none;
+    padding:14px 25px;
+    border-radius:50px;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.message{
+    margin-top:20px;
+    display:none;
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.message p{
+    line-height:1.6;
+    font-size:1rem;
+}
+
+@media(max-width:480px){
+    h1{
+        font-size:1.8rem;
+    }
+
+    .cake{
+        font-size:3rem;
+    }
+
+    .card{
+        padding:25px 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+    <div class="cake">🎂</div>
+
+    <h1>Happy Birthday!</h1>
+
+    <p class="subtitle">
+        Wishing you a day filled with happiness, laughter, and unforgettable memories.
+    </p>
+
+    <button onclick="showMessage()">
+        Open Your Birthday Wish 🎁
+    </button>
+
+    <div class="message" id="wish">
+        <p>
+            🎉 May your special day bring you endless joy, success, and all the wonderful things you deserve.
+            May every dream you have come true and every moment be filled with happiness.
+            <br><br>
+            ❤️ Have an amazing birthday and a fantastic year ahead!
+        </p>
+    </div>
+</div>
+
+<script>
+function showMessage(){
+    document.getElementById("wish").style.display = "block";
+}
+
+// Confetti Animation
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const confetti = [];
+
+for(let i=0;i<180;i++){
+    confetti.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*6+2,
+        d: Math.random()*180,
+        color:`hsl(${Math.random()*360},100%,50%)`,
+        tilt:Math.random()*10-10
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    confetti.forEach(c=>{
+        ctx.beginPath();
+        ctx.lineWidth=c.r;
+        ctx.strokeStyle=c.color;
+        ctx.moveTo(c.x+c.tilt,c.y);
+        ctx.lineTo(c.x,c.y+c.tilt+10);
+        ctx.stroke();
+    });
+
+    update();
+}
+
+let angle=0;
+
+function update(){
+    angle += 0.01;
+
+    confetti.forEach((c,index)=>{
+        c.y += (Math.cos(angle+c.d)+3+c.r/2)/2;
+        c.x += Math.sin(angle);
+
+        if(c.y > canvas.height){
+            confetti[index] = {
+                ...c,
+                y:-20,
+                x:Math.random()*canvas.width
+            };
+        }
+    });
+}
+
+setInterval(draw,20);
+</script>
+
+</body>
+</html>
